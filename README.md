@@ -109,4 +109,4 @@ module.exports = function(app) {
     })
 }
 ```
-这时候仍可以使用hmr(npm run dev:client npm run dev:server localhost:3333。
+这时候仍可以使用hmr(npm run dev:client npm run dev:server localhost:3333)。
