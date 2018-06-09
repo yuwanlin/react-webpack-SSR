@@ -33,11 +33,11 @@ if (isDev) {
   config.devServer = {
     host: '0.0.0.0',
     port: '8888',
-    contentBase: path.join(__dirname, '../dist'), //dist目录为项目根目录
+    contentBase: path.join(__dirname, '../dist'), // dist目录为项目根目录
     overlay: {
-      errrors: true,
+      errrors: true
     },
-    //如果dist目录有文件，localhost:8888/app.xxx.js可以直接访问。但是html中引用的js路径是/public/app.xxx.js
+    // 如果dist目录有文件，localhost:8888/app.xxx.js可以直接访问。但是html中引用的js路径是/public/app.xxx.js
     publicPath: '/public/', // 设置了output.publicPath,导致引用的文件有public目录。这里设置相当于解析了文件中的public目录。
     hot: true,
     historyApiFallback: {

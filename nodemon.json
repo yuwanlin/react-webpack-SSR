@@ -1,0 +1,13 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    "build",
+    "client",
+    "node_modules"
+  ],
+  "ext": "js",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "verbose": true
+}
