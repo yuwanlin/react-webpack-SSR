@@ -1,27 +1,18 @@
 const path = require('path');
+const webpackMerge = require('webpack-merge');
+const webpackBase = require('./webpack.config.base');
 
-module.exports = {
-    target: 'node',
-    entry: {
-        app: path.join(__dirname, '../client/server-entry.js')
-    },
-    output: {
-        filename: 'server-entry.js',
-        path: path.join(__dirname, '../dist'),
-        publicPath:'/public',
-        libraryTarget: 'commonjs2'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.jsx?/,
-                exclude: /node_modules/,
-                loader: 'babel-loader'
-            }
-        ]
-    },
-    resolve: {
-        extensions: ['.js', '.jsx']
-    },
-    mode: 'development'
-}
+module.exports = webpackMerge(webpackBase, {
+  target: 'node',
+  entry: {
+    app: path.join(__dirname, '../client/server-entry.js')
+  },
+  output: {
+    filename: 'server-entry.js',
+    libraryTarget: 'commonjs2'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  mode: 'development'
+})
