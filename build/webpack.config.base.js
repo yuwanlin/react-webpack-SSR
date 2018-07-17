@@ -5,6 +5,7 @@ module.exports = {
     path: path.join(__dirname, '../dist'),
     publicPath: '/public/'
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -19,5 +20,9 @@ module.exports = {
         exclude: /node_modules/
       }
     ]
-  }
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  mode: 'development'
 }

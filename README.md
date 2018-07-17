@@ -96,11 +96,11 @@ serverCompile.watch({}, (err, stats) => { // 监听entry
 })
 
 module.exports = function(app) {
-    
+
     app.use('/public', proxy({
         target: 'http://localhost:8888' //启动服务器后，访问的文件时3333端口的，代理到8888端口，因为文件时通过webpack生成的，webpack服务器端口是8888
     }))
-    
+
     app.get('*', function(req, res) {
         getTemplate().then(template => {
             const appString = reactSSR.renderToString(serverBundle);
@@ -110,3 +110,34 @@ module.exports = function(app) {
 }
 ```
 这时候仍可以使用hmr(npm run dev:client npm run dev:server localhost:3333)。
+
+8.husky在scripts中添加了'precommit'命令。在commit时会执行这个命令。
+9.serve-favicon用来配置页面icon。
+
+10.使用mobx和mobx-react，需要用到装饰器。安装babel-preset-stage-1,babel-plugin-trnasform-decorators-legacy.
+
+11.body-parser用于解析请求的参数。网络请求使用网络库axios。
+
+12.路由使用react-router-dom。
+
+13.webpack.config.client.js中devServer.proxy设置'/api'的请求代理到服务器'http:localhost:3333'
+
+14。由于前端使用了router和store，所以server-side-render需要作出改变。需要用到StaticRouter.
+
+15.react-async-bootstrapper这个库可以在服务端渲染组件之前通过执行bootstrap方法修改store。会导致server端store数据和client端不一样，所以需要server提供store数据给client。这里使用了server.template.ejs模板。
+```
+new HTMLPlugin({
+  template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+  filename: 'server.ejs'
+})
+```
+由于htmlWebpackPlugin会解析ejs，所以模板文件中防止ejs被解析。随后使用ejs-compiled-loader来编译，得到的template使用ejs.render来编译。
+```
+const html = ejs.render(template, {
+  appString: content,
+  initialState: serialize(state)
+})
+```
+因为state是一个对象，传给前端会变成[object Object]。所以需要转换为字符串，这里使用的是serialize-javascript库。
+
+

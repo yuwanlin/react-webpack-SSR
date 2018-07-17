@@ -15,12 +15,12 @@ const config = webpackMerge(webpackBase, {
   plugins: [
     new HTMLPlugin({
       template: path.join(__dirname, '../client/template.html')
+    }),
+    new HTMLPlugin({
+      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+      filename: 'server.ejs'
     })
-  ],
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
-  mode: 'development'
+  ]
 })
 
 if (isDev) {
@@ -35,13 +35,17 @@ if (isDev) {
     port: '8888',
     contentBase: path.join(__dirname, '../dist'), // dist目录为项目根目录
     overlay: {
-      errrors: true
+      errrors: true,
+      warnings: true
     },
     // 如果dist目录有文件，localhost:8888/app.xxx.js可以直接访问。但是html中引用的js路径是/public/app.xxx.js
     publicPath: '/public/', // 设置了output.publicPath,导致引用的文件有public目录。这里设置相当于解析了文件中的public目录。
     hot: true,
     historyApiFallback: {
       index: '/public/index.html'
+    },
+    proxy: {
+      '/api': 'http://localhost:3333'
     }
   }
   config.plugins.push(new webpack.HotModuleReplacementPlugin());

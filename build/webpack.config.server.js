@@ -10,9 +10,5 @@ module.exports = webpackMerge(webpackBase, {
   output: {
     filename: 'server-entry.js',
     libraryTarget: 'commonjs2'
-  },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
-  mode: 'development'
+  }
 })
