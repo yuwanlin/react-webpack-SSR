@@ -140,4 +140,48 @@ const html = ejs.render(template, {
 ```
 因为state是一个对象，传给前端会变成[object Object]。所以需要转换为字符串，这里使用的是serialize-javascript库。
 
+16.webpack.config.server.js添加externals后，dev-static中m._compile(bundle, 'server-entry.js'); 编译得到的文件中无法require模块
+```
+const getModuleFromString = (bundle, filename) => {
+  const m = { exports: {} }
+  const wrapper = NativeModule.wrap(bundle) // `(function(exports, require, module, __filename, __dirname){ ... bundle })`
+  const script = new vm.Script(wrapper, {
+    filename: filename,
+    displayErrors: true
+  })
+
+  const result = script.runInThisContext();
+  result.call(m.exports, m.exports, require, m); // 提供require
+
+  return m;
+}
+```
+通过helmet解决seo。
+```
+<div>
+        <Helmet>
+          <title>This is topic list</title>
+          <meta name="discription" content="this is description" />
+        </Helmet>
+        <input type="text" onChange={this.changeName} />
+        {this.props.appState.msg}
+      </div>
+```
+```
+Helmet = require('react-helmet').default;
+const helmet = Helmet.rewind(); // HelmetExport.renderStatic = HelmetExport.rewind;
+const content = reactDomServer.renderToString(app);
+// res.send(template.replace('<!-- app -->', content));
+// content是内容，template是模板文件
+const html = ejs.render(template, {
+  appString: content,
+  initialState: serialize(state),
+  meta: helmet.meta.toString(),
+  title: helmet.title.toString(),
+  style: helmet.style.toString(),
+  link: helmet.link.toString(),
+})
+
+```
+
 
