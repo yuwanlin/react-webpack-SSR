@@ -16,6 +16,7 @@
       "comma-dangle": "off",
       "jsx-a11y/anchor-is-valid": "off",
       "no-console": "off",
-      "no-underscore-dangle": "off"
+      "no-underscore-dangle": "off",
+      "react/forbid-prop-types": "off"
     }
 }

@@ -3,6 +3,10 @@ const ejs = require('ejs');
 const bootstrapper = require('react-async-bootstrapper');
 const reactDomServer = require('react-dom/server');
 const Helmet = require('react-helmet').default;
+const SheetsRegistry = require('react-jss').SheetsRegistry;
+const colors = require('@material-ui/core/colors');
+const createMuiTheme = require('@material-ui/core/styles').createMuiTheme;
+const createGenerateClassName = require('@material-ui/core/styles').createGenerateClassName;
 
 const getStoreState = (stores) => {
   return Object.keys(stores).reduce((result, storeName) => {
@@ -13,12 +17,20 @@ const getStoreState = (stores) => {
 
 module.exports = (bundle, template, req, res) => {
   return new Promise((resolve, reject) => {
-    console.log(bundle)
     const createStoreMap = bundle.createStoreMap;
     const createApp = bundle.default;
     const routerContext = {};
     const stores = createStoreMap();
-    const app = createApp(stores, routerContext, req.url);
+    const sheetsRegistry = new SheetsRegistry();
+    const theme = createMuiTheme({
+      palette: {
+        primary: colors.lightBlue,
+        secondary: colors.pink,
+        type: 'light'
+      }
+    })
+    const generateClassName = createGenerateClassName();
+    const app = createApp(stores, routerContext, sheetsRegistry, generateClassName, theme, req.url);
     bootstrapper(app).then(() => {
       /**
        * 因为前端使用了Redirect，url查看localhost:3333的源代码是没有重定向过的，所以需要在服务端重定向
@@ -42,6 +54,7 @@ module.exports = (bundle, template, req, res) => {
         title: helmet.title.toString(),
         style: helmet.style.toString(),
         link: helmet.link.toString(),
+        materialCss: sheetsRegistry.toString()
       })
 
       res.send(html);

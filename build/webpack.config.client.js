@@ -24,6 +24,7 @@ const config = webpackMerge(webpackBase, {
 })
 
 if (isDev) {
+  config.devtool = 'cheap-module-eval-source-map';
   config.entry = {
     app: [
       'react-hot-loader/patch',
@@ -33,7 +34,7 @@ if (isDev) {
   config.devServer = {
     host: '0.0.0.0',
     port: '8888',
-    contentBase: path.join(__dirname, '../dist'), // dist目录为项目根目录
+    // contentBase: path.join(__dirname, '../dist'), // dist目录为项目根目录
     overlay: {
       errrors: true,
       warnings: true
